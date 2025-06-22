@@ -40,30 +40,35 @@ export const useAuthStore = create<AuthStore>()(
 
       setToken: (token: string) => {
         set({ token });
-        // Also set in localStorage for axios interceptor
-        localStorage.setItem('token', token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', token);
+        }
       },
 
       login: (user: User, token: string) => {
-        set({ 
-          user, 
-          token, 
-          isAuthenticated: true, 
-          error: null 
+        set({
+          user,
+          token,
+          isAuthenticated: true,
+          error: null
         });
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
+        }
       },
 
       logout: () => {
-        set({ 
-          user: null, 
-          token: null, 
-          isAuthenticated: false, 
-          error: null 
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+          error: null
         });
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
       },
 
       setLoading: (loading: boolean) => {
@@ -83,7 +88,9 @@ export const useAuthStore = create<AuthStore>()(
         if (currentUser) {
           const updatedUser = { ...currentUser, ...userData };
           set({ user: updatedUser });
-          localStorage.setItem('user', JSON.stringify(updatedUser));
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+          }
         }
       },
     }),

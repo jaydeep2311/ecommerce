@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
@@ -57,11 +58,11 @@ const categories = [
 export default function EditProductPage() {
   const params = useParams();
   const router = useRouter();
-  const productId = params.id as string;
+  const productId = params?.id ?? '' as string;
 
   const { data: productData, isLoading, error } = useQuery({
     queryKey: ['products', productId],
-    queryFn: () => productsApi.getProduct(productId),
+    queryFn: () => productsApi.getProduct(productId?.toString()??''),
     enabled: !!productId,
   });
 
@@ -97,7 +98,7 @@ export default function EditProductPage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
               <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-              <p className="text-gray-600 mb-8">The product you're trying to edit doesn't exist.</p>
+              <p className="text-gray-600 mb-8">The product youre trying to edit doesnt exist.</p>
               <button
                 onClick={() => router.push('/products/manage')}
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
@@ -158,29 +159,33 @@ export default function EditProductPage() {
               validationSchema={productSchema}
               onSubmit={(values, { setSubmitting }) => {
                 // Clean up the data
+                const dimensions = {
+                  length: values.dimensions.length ? parseFloat(values.dimensions.length) : undefined,
+                  width: values.dimensions.width ? parseFloat(values.dimensions.width) : undefined,
+                  height: values.dimensions.height ? parseFloat(values.dimensions.height) : undefined,
+                };
+
+                // Check if dimensions has any values
+                const hasDimensions = dimensions.length || dimensions.width || dimensions.height;
+
+                // Exclude dimensions from values spread to avoid type conflicts
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { dimensions: _dimensions, ...valuesWithoutDimensions } = values;
+
                 const productData = {
-                  ...values,
+                  ...valuesWithoutDimensions,
                   price: parseFloat(values.price),
                   originalPrice: values.originalPrice ? parseFloat(values.originalPrice) : undefined,
                   stock: parseInt(values.stock),
                   lowStockThreshold: values.lowStockThreshold ? parseInt(values.lowStockThreshold) : undefined,
                   weight: values.weight ? parseFloat(values.weight) : undefined,
-                  dimensions: {
-                    length: values.dimensions.length ? parseFloat(values.dimensions.length) : undefined,
-                    width: values.dimensions.width ? parseFloat(values.dimensions.width) : undefined,
-                    height: values.dimensions.height ? parseFloat(values.dimensions.height) : undefined,
-                  },
+                  ...(hasDimensions && { dimensions }),
                   tags: values.tags.filter(tag => tag.trim() !== ''),
                   features: values.features.filter(feature => feature.trim() !== ''),
                   images: values.images.filter(img => img.url.trim() !== ''),
                 };
 
-                // Remove empty dimensions object
-                if (!productData.dimensions.length && !productData.dimensions.width && !productData.dimensions.height) {
-                  delete productData.dimensions;
-                }
-
-                updateProductMutation.mutate({ id: productId, data: productData }, {
+                updateProductMutation.mutate({ id: productId?.toString() ?? '', data: productData }, {
                   onSuccess: () => {
                     setSubmitting(false);
                     router.push('/products/manage');

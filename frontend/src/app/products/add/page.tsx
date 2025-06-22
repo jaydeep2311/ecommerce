@@ -100,27 +100,31 @@ export default function AddProductPage() {
               validationSchema={productSchema}
               onSubmit={(values, { setSubmitting }) => {
                 // Clean up the data
+                const dimensions = {
+                  length: values.dimensions.length ? parseFloat(values.dimensions.length) : undefined,
+                  width: values.dimensions.width ? parseFloat(values.dimensions.width) : undefined,
+                  height: values.dimensions.height ? parseFloat(values.dimensions.height) : undefined,
+                };
+
+                // Check if dimensions has any values
+                const hasDimensions = dimensions.length || dimensions.width || dimensions.height;
+
+                // Exclude dimensions from values spread to avoid type conflicts
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { dimensions: _dimensions, ...valuesWithoutDimensions } = values;
+
                 const productData = {
-                  ...values,
+                  ...valuesWithoutDimensions,
                   price: parseFloat(values.price),
                   originalPrice: values.originalPrice ? parseFloat(values.originalPrice) : undefined,
                   stock: parseInt(values.stock),
                   lowStockThreshold: values.lowStockThreshold ? parseInt(values.lowStockThreshold) : undefined,
                   weight: values.weight ? parseFloat(values.weight) : undefined,
-                  dimensions: {
-                    length: values.dimensions.length ? parseFloat(values.dimensions.length) : undefined,
-                    width: values.dimensions.width ? parseFloat(values.dimensions.width) : undefined,
-                    height: values.dimensions.height ? parseFloat(values.dimensions.height) : undefined,
-                  },
+                  ...(hasDimensions && { dimensions }),
                   tags: values.tags.filter(tag => tag.trim() !== ''),
                   features: values.features.filter(feature => feature.trim() !== ''),
                   images: values.images.filter(img => img.url.trim() !== ''),
                 };
-
-                // Remove empty dimensions object
-                if (!productData.dimensions.length && !productData.dimensions.width && !productData.dimensions.height) {
-                  delete productData.dimensions;
-                }
 
                 createProductMutation.mutate(productData, {
                   onSuccess: () => {
@@ -308,6 +312,7 @@ export default function AddProductPage() {
                                   name={`images.${index}.isPrimary`}
                                   type="checkbox"
                                   className="mr-2"
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                   onChange={(e: any) => {
                                     if (e.target.checked) {
                                       // Uncheck all other primary flags

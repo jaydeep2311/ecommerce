@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ordersApi, CreateOrderData } from '@/api/orders';
 import { useCartActions } from '@/stores/cartStore';
 import { toast } from 'react-hot-toast';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 const checkoutSchema = Yup.object().shape({
   fullName: Yup.string()
@@ -61,6 +62,7 @@ export default function CheckoutPage() {
       toast.success('Order placed successfully!');
       router.push(`/orders/${data.data._id}`);
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       const message = error.response?.data?.message || 'Failed to place order';
       toast.error(message);

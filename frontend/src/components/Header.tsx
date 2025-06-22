@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useAuth, useAuthActions } from '@/stores/authStore';
+import { useAuth } from '@/stores/authStore';
 import { useCart } from '@/hooks/queries/useCart';
 import { useLogout } from '@/hooks/mutations/useAuth';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
-  const { user, isAuthenticated, isAdmin, isUser } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuth();
   const { data: cartData } = useCart();
   const logoutMutation = useLogout();
 

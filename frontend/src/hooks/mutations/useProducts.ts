@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { productsApi, CreateProductData } from '@/api/products';
 import { toast } from 'react-hot-toast';
@@ -7,7 +8,7 @@ export const useCreateProduct = () => {
 
   return useMutation({
     mutationFn: productsApi.createProduct,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
       toast.success('Product created successfully!');

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -9,28 +9,29 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ordersApi } from '@/api/orders';
 import { toast } from 'react-hot-toast';
 
-export default function OrderDetailPage() {
+function OrderDetailContent() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const orderId = params.id as string;
-  const action = searchParams.get('action');
+  const orderId = params?.id ?? "" as string;
+  const action = searchParams?.get('action');
   const [showCancelModal, setShowCancelModal] = useState(action === 'cancel');
   const [cancelReason, setCancelReason] = useState('');
   const queryClient = useQueryClient();
 
   const { data: orderData, isLoading, error } = useQuery({
     queryKey: ['orders', orderId],
-    queryFn: () => ordersApi.getOrder(orderId),
+    queryFn: () => ordersApi.getOrder(orderId?.toString()??''),
     enabled: !!orderId,
   });
 
   const cancelOrderMutation = useMutation({
-    mutationFn: (reason: string) => ordersApi.cancelOrder(orderId, { reason }),
+    mutationFn: (reason: string) => ordersApi.cancelOrder(orderId?.toString()??'', { reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       toast.success('Order cancelled successfully');
       setShowCancelModal(false);
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       const message = error.response?.data?.message || 'Failed to cancel order';
       toast.error(message);
@@ -94,7 +95,7 @@ export default function OrderDetailPage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
               <h1 className="text-2xl font-bold text-gray-900 mb-4">Order Not Found</h1>
-              <p className="text-gray-600 mb-8">The order you're looking for doesn't exist.</p>
+              <p className="text-gray-600 mb-8">The order youre looking for doesnt exist.</p>
               <Link
                 href="/orders"
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
@@ -343,5 +344,28 @@ export default function OrderDetailPage() {
         )}
       </div>
     </ProtectedRoute>
+  );
+}
+
+function OrderDetailPageFallback() {
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+}
+
+export default function OrderDetailPage() {
+  return (
+    <Suspense fallback={<OrderDetailPageFallback />}>
+      <OrderDetailContent />
+    </Suspense>
   );
 }

@@ -22,7 +22,10 @@ export interface ShippingAddress {
 export interface Order {
   _id: string;
   orderNumber: string;
-  user: string;
+  user: {
+    name:string;
+    email:string;
+  };
   items: OrderItem[];
   shippingAddress: ShippingAddress;
   paymentInfo: {

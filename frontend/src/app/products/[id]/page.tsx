@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
@@ -15,16 +16,16 @@ import { toast } from 'react-hot-toast';
 
 export default function ProductDetailPage() {
   const params = useParams();
-  const productId = params.id as string;
+  const productId = params?.id ?? "" as string;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const { data: productData, isLoading, error } = useProduct(productId);
+  const { data: productData, isLoading, error } = useProduct(productId?.toString() ?? '');
   const product = productData?.data;
 
   const { data: relatedProducts } = useRelatedProducts(
     product?.category || '',
-    productId,
+    productId?.toString()??'',
     4
   );
 
@@ -88,7 +89,7 @@ export default function ProductDetailPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-            <p className="text-gray-600 mb-8">The product you're looking for doesn't exist.</p>
+            <p className="text-gray-600 mb-8">The product youre looking for doesnt exist.</p>
             <Link
               href="/products"
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
@@ -310,7 +311,7 @@ export default function ProductDetailPage() {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <ProductReviews
             productId={product._id}
-            reviews={product.reviews}
+            reviews={product.reviews as any}
             averageRating={product.rating.average}
             totalReviews={product.rating.count}
           />

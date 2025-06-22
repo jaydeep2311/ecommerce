@@ -1,19 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import ProductCard from '@/components/ProductCard';
 import { useProducts, useCategories, useBrands } from '@/hooks/queries/useProducts';
 import { ProductsQuery } from '@/api/products';
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<ProductsQuery>({
     page: 1,
     limit: 12,
-    search: searchParams.get('search') || '',
-    category: searchParams.get('category') || '',
+    search: searchParams?.get('search') || '',
+    category: searchParams?.get('category') || '',
     sortBy: 'newest',
     sortOrder: 'desc'
   });
@@ -260,5 +261,26 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ProductsPageFallback() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<ProductsPageFallback />}>
+      <ProductsContent />
+    </Suspense>
   );
 }

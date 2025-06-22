@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useProducts } from '@/hooks/queries/useProducts';
-import { useDeleteProduct, useRestoreProduct } from '@/hooks/mutations/useProducts';
+import { useDeleteProduct } from '@/hooks/mutations/useProducts';
 import { ProductsQuery } from '@/api/products';
 
 export default function ManageProductsPage() {

@@ -43,6 +43,7 @@ export interface Product {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt: string;
   discountPercentage: number;
   stockStatus: 'in_stock' | 'low_stock' | 'out_of_stock';
   primaryImage?: {

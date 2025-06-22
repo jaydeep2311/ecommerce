@@ -28,6 +28,7 @@ export default function ManageOrdersPage() {
       queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] });
       toast.success('Order status updated successfully');
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       const message = error.response?.data?.message || 'Failed to update order status';
       toast.error(message);

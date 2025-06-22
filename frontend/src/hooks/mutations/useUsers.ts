@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { usersApi, CreateUserData, UpdateUserData } from '@/api/users';
+import { usersApi, UpdateUserData } from '@/api/users';
 import { toast } from 'react-hot-toast';
 
 export const useCreateUser = () => {

@@ -67,7 +67,7 @@ export default function CreateUserPage() {
       await createUserMutation.mutateAsync(formData);
       router.push('/admin/users');
     } catch (error) {
-      // Error is handled by the mutation hook
+      console.log({error})
     }
   };
 

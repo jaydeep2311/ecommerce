@@ -233,7 +233,7 @@ export default function OrdersPage() {
                 </svg>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">No orders found</h2>
-              <p className="text-gray-600 mb-8">You haven't placed any orders yet</p>
+              <p className="text-gray-600 mb-8">You havent placed any orders yet</p>
               <Link
                 href="/products"
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"

@@ -88,7 +88,7 @@ export default function RegisterPage() {
           }}
           validationSchema={registerSchema}
           onSubmit={(values, { setSubmitting }) => {
-            const { confirmPassword, ...registerData } = values;
+            const {  ...registerData } = values;
             registerMutation.mutate(registerData, {
               onSettled: () => setSubmitting(false),
             });

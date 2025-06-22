@@ -36,8 +36,8 @@ export default function UserDashboardPage() {
   const recentOrders = orders.slice(0, 5);
 
   const tabs = [
-    { id: 'orders', name: 'Order Analytics', icon: '📊' },
-    { id: 'profile', name: 'Profile', icon: '👤' },
+    { id: 'orders' as const, name: 'Order Analytics', icon: '📊' },
+    { id: 'profile' as const, name: 'Profile', icon: '👤' },
   ];
 
   const getStatusColor = (status: string) => {
@@ -70,7 +70,7 @@ export default function UserDashboardPage() {
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id)}
                     className={`py-4 px-1 border-b-2 font-medium text-sm ${
                       activeTab === tab.id
                         ? 'border-blue-500 text-blue-600'

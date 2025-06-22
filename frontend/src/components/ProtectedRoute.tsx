@@ -17,7 +17,7 @@ export default function ProtectedRoute({
   requireAdmin = false,
   redirectTo = '/auth/login'
 }: ProtectedRouteProps) {
-  const { isAuthenticated, isAdmin, user } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function ProtectedRoute({
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-gray-600">You don't have permission to access this page.</p>
+          <p className="text-gray-600">You dont have permission to access this page.</p>
         </div>
       </div>
     );
