@@ -173,13 +173,9 @@ export default function LoginPage() {
                   <div className="bg-gray-50 p-3 rounded">
                     <p className="font-medium">Admin Account</p>
                     <p>admin@example.com</p>
-                    <p>password123</p>
+                    <p>Admin123!</p>
                   </div>
-                  <div className="bg-gray-50 p-3 rounded">
-                    <p className="font-medium">User Account</p>
-                    <p>user@example.com</p>
-                    <p>password123</p>
-                  </div>
+                  
                 </div>
               </div>
             </Form>

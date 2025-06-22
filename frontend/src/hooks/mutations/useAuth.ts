@@ -33,17 +33,13 @@ export const useLogin = () => {
 };
 
 export const useRegister = () => {
-  const { login } = useAuthActions();
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: authApi.register,
     onSuccess: (data) => {
-      login(data.data, data.token);
-      queryClient.setQueryData(['auth', 'me'], { success: true, data: data.data });
-      toast.success('Registration successful!');
-      router.push('/');
+      toast.success(data.message || 'Registration successful! Please login to continue.');
+      router.push('/auth/login');
     },
     onError: (error: ApiError) => {
       const message = error.response?.data?.message || 'Registration failed';

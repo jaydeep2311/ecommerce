@@ -36,11 +36,15 @@ exports.register = async (req, res, next) => {
       address
     });
 
-    // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    // Remove password from response
+    const userResponse = user.toObject();
+    delete userResponse.password;
 
-    sendTokenResponse(user, 201, res);
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully. Please login to continue.',
+      data: userResponse
+    });
   } catch (error) {
     next(error);
   }

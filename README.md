@@ -2,10 +2,10 @@
 
 A full-stack e-commerce platform built with Next.js, Express.js, and MongoDB. Features include user authentication, product management, shopping cart, order processing, and admin dashboard.
 
-## 🚀 Features
 
 ### User Features
-- User registration and authentication
+- User registration (redirects to login page after successful registration)
+- User authentication and login
 - Product browsing with filters and search
 - Shopping cart functionality
 - Order placement and tracking
@@ -162,8 +162,8 @@ npm test
 
 The API follows RESTful conventions. Key endpoints include:
 
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration (returns success message, requires separate login)
+- `POST /api/auth/login` - User login (returns JWT token)
 - `GET /api/products` - Get products with filters
 - `POST /api/cart/add` - Add item to cart
 - `POST /api/orders` - Create order
